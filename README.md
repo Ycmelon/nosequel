@@ -23,7 +23,6 @@ MongoDB library app
 -	Add borrower's (name, username, phone) to library 
 -	Delete borrowers from library 
 -	Edit borrower information 
--	Search by name, username 
 - Allow borrowers to checkout/return books (if available)
 -	Track number of books checked out by a given user
 - Track which user has checked out a book
@@ -32,6 +31,7 @@ MongoDB library app
 
 -	Search by title, authors, or ISBN
 -	Sort by title, authors, ISBN or page count
+-	Search by name, username 
 
 ## Quirks
 
