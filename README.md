@@ -8,12 +8,14 @@ MongoDB library app
 ## Features
 
 ### Books
+
 -	Add book (Title, Authors, ISBN, Page count) to library
 -	Delete book from library 
 -	Edit book information
 -	Remove specific attributes from book
 
 ### Borrowers
+
 -	Add borrower's (Name, Username, Phone) to library 
 -	Delete borrowers from library 
 -	Edit borrower information 
@@ -23,9 +25,14 @@ MongoDB library app
 - Track which user has checked out a book
 
 ### Browsing
+
 -	Search by title, author, or ISBN
 -	Sort by title, author, ISBN or page count
 
+## Quirks
+
+- For update and insert, `field: ""` will not be inserted (no field in document)
+- Missing fields or `field: null` will show up as "\<null\>"
 
 ## Installation
 
