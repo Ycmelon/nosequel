@@ -5,6 +5,10 @@
 
 MongoDB library app
 
+## Screenshots
+
+![Demo image](.github/demo.png)
+
 ## Features
 
 ### Books
