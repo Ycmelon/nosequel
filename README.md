@@ -44,9 +44,9 @@ MongoDB library app
 
 Run `cli.py`
 
-## Contributing
+### Sorting
 
-Pull requests are welcome! For major changes, please open an issue first to discuss what you would like to change.
+In any search query, append `sortby:<field>` to sort (fields: `title`, `authors`, `isbn`, `page_count`)
 
 ## License
 
