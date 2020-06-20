@@ -9,14 +9,14 @@ MongoDB library app
 
 ### Books
 
--	Add book (Title, Authors, ISBN, Page count) to library
+-	Add book (title, authors, isbn, page_count) to library
 -	Delete book from library 
 -	Edit book information
 -	Remove specific attributes from book
 
 ### Borrowers
 
--	Add borrower's (Name, Username, Phone) to library 
+-	Add borrower's (name, username, phone) to library 
 -	Delete borrowers from library 
 -	Edit borrower information 
 -	Search by name, username 
@@ -26,8 +26,8 @@ MongoDB library app
 
 ### Browsing
 
--	Search by title, author, or ISBN
--	Sort by title, author, ISBN or page count
+-	Search by title, authors, or ISBN
+-	Sort by title, authors, ISBN or page count
 
 ## Quirks
 
@@ -37,6 +37,7 @@ MongoDB library app
 ## Installation
 
 - Clone this respository
+- Rename `config_template.py` to `config.py` and update values
 - [requirements.txt](/requirements.txt)
 
 ## Usage
