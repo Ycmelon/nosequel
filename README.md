@@ -1,7 +1,7 @@
 # :blue_book: Nosequel - Y3 CEP Weighted Assessment 3
 
-![GitHub licence](https://img.shields.io/github/license/Ycmelon/nosequel?color=orange)
-![Python version](https://img.shields.io/badge/Python-3.8-orange.svg)
+![Python version](https://img.shields.io/badge/Python-3.8-blue.svg)
+![GitHub licence](https://img.shields.io/github/license/Ycmelon/nosequel?color=blue)
 
 A basic library app, made with Python and MongoDB
 
