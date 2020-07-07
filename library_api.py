@@ -4,6 +4,8 @@ from templates import *
 from pymongo import MongoClient
 from bson.objectid import ObjectId
 
+from functools import lru_cache
+
 client = MongoClient(config.connection_string)
 db = client["library"]
 
@@ -32,18 +34,20 @@ def insert_book(book: dict):
             page_count(int)
     """
 
-    to_insert = book
-    db.books.insert_one(to_insert)
+    db.books.insert_one(book)
 
 
-def delete_book(book_id: ObjectId):
-    """Deletes a book from the collection
+def delete_books(book_ids: list):
+    """Deletes many books from the collection
 
     Args:
-        book_id(ObjectId)
+        book_ids(list):
+            ObjectId
     """
 
-    db.books.delete_one({"_id": book_id})
+    db.books.delete_many({"_id": {"$in": book_ids}})
+    db.loans.update_many({"book_id": {"$in": book_ids}},
+                         {"$set": {"returned": True}})
 
 
 def update_book(book_id: ObjectId, book: dict):
@@ -57,8 +61,6 @@ def update_book(book_id: ObjectId, book: dict):
             isbn(str)
             page_count(int)
     """
-
-    # db.books.update_one({"_id": book_id}, {"$set": book})
 
     # To allow removing fields
     db.books.replace_one({"_id": book_id}, book)
@@ -75,10 +77,6 @@ def remove_attributes_book(book_id: ObjectId, attributes: list):
             isbn(str)
             page_count(int)
     """
-
-    # Set null:
-    # remove_attributes = {attribute: None for attribute in attributes}
-    # db.books.update_one({"_id": book_id}, {"$set": remove_attributes})
 
     remove_attributes = {attribute: "" for attribute in attributes}
     db.books.update_one({"_id": book_id}, {"$unset": remove_attributes})
@@ -110,14 +108,17 @@ def insert_borrower(borrower: dict):
     db.borrowers.insert_one(borrower)
 
 
-def delete_borrower(borrower_id: ObjectId):
-    """Deletes a borrower from the collection
+def delete_borrowers(borrower_ids: list):
+    """Deletes many borrowers from the collection
 
     Args:
-        borrower_id(ObjectId)
+        borrower_ids(list):
+            ObjectId
     """
 
-    db.borrowers.delete_one({"_id": borrower_id})
+    db.borrowers.delete_many({"_id": {"$in": borrower_ids}})
+    db.loans.update_many(
+        {"borrower_id": {"$in": borrower_ids}}, {"$set": {"returned": True}})
 
 
 def update_borrower(borrower_id: ObjectId, borrower: dict):
@@ -137,53 +138,27 @@ def update_borrower(borrower_id: ObjectId, borrower: dict):
     db.borrowers.replace_one({"_id": borrower_id}, borrower)
 
 
-def checkout_book(borrower_id: ObjectId, book_id: ObjectId) -> int:
+def checkout_book(borrower_id: ObjectId, book_id: ObjectId):
     """Checks out a book
 
     Args:
         borrower_id(ObjectId)
         book_id(ObjectId)
-
-    Returns:
-        -1: Book not in library
-        0: Book already checked out
-        1: Book successfully checked out
     """
 
-    book = db.books.find_one({"_id": book_id})
-
-    if book == None:
-        return -1
-    elif "borrower" in book:
-        if book["borrower"] != None:
-            return 0
-
-    db.books.update_one({"_id": book_id}, {"$set": {"borrower": borrower_id}})
-    return 1
+    db.loans.insert_one({"borrower_id": borrower_id,
+                         "book_id": book_id, "returned": False})
 
 
-def return_book(book_id: ObjectId) -> int:
+def return_book(book_id: ObjectId):
     """Returns a book
 
     Args:
         book_id(ObjectId)
-
-    Returns:
-        -1: Book not in library
-        0: Book already returned
-        1: Book successfully returned
     """
 
-    book = db.books.find_one({"_id": book_id})
-
-    if book == None:
-        return -1
-    elif "borrower" in book:
-        if book["borrower"] == None:
-            return 0
-
-    db.books.update_one({"_id": book_id}, {"$set": {"borrower": None}})
-    return 1
+    book = db.loans.update_one({"book_id": book_id, "returned": False}, {
+                               "$set": {"returned": True}})
 
 
 def validate_username(username: str):
@@ -191,6 +166,10 @@ def validate_username(username: str):
 
     Args:
         username(str)
+
+    Returns:
+        bool
+        str
     """
 
     if db.borrowers.find_one({"username": username}) == None:
@@ -198,6 +177,62 @@ def validate_username(username: str):
     return db.borrowers.find_one({"username": username})["_id"]
 
 
-# if __name__ == "__main__":
-#     print(get_book(ObjectId("5eeccbcbcf92ea05a4a61b74")))
-#     client.close()
+@lru_cache
+def get_username(borrower_id: ObjectId) -> str:
+    """Gets username
+
+    Args:
+        borrower_id(str)
+
+    Returns:
+        str
+    """
+
+    cursor = db.borrowers.find_one({"_id": borrower_id})
+    return cursor["username"] if "username" in cursor else str(borrower_id)
+
+
+def is_checked_out(book_id: ObjectId):
+    """Checks whether a book is checked out
+
+    Args:
+        book_id(ObjectId)
+
+    Returns:
+        bool: Not checked out
+        ObjectId: User ID of borrower
+    """
+
+    loan = db.loans.find_one({"book_id": book_id, "returned": False})
+    if loan == None:
+        return False
+    return loan["borrower_id"]
+
+
+def get_borrowed_books(borrower_id: ObjectId) -> list:
+    """Gets currently borrowed books
+
+    Args:
+        borrower_id(ObjectId)
+
+    Returns:
+        list
+    """
+
+    return list(db.loans.find({"borrower_id": borrower_id, "returned": False}))
+
+
+def search_function(collection: str, query: str):
+    """Performs a search
+
+    Args:
+        collection(str):
+            borrowers
+            books
+        query(str)
+
+    Returns:
+        cursor
+    """
+
+    return db[collection].find({"$text": {"$search": query}})

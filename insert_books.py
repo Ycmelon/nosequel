@@ -13,8 +13,7 @@ while (query := input("Google Book ID: ")) != "":
     books.insert_one({"title": book_info["title"],
                       "authors": book_info["authors"],
                       "isbn": book_info["industryIdentifiers"][-1]["identifier"],
-                      "page_count": book_info["pageCount"],
-                      "borrower": None})
+                      "page_count": book_info["pageCount"]})
 
     print(f"Inserted book \"{book_info['title']}\"!")
 
