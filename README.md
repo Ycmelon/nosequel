@@ -1,4 +1,4 @@
-# :blue_book: Nosequel - Y3 CEP Weighted Assessment 3
+# 📘 Nosequel - Y3 CEP Weighted Assessment 3
 
 ![Python version](https://img.shields.io/badge/Python-3.8-blue.svg)
 ![GitHub licence](https://img.shields.io/github/license/Ycmelon/nosequel?color=blue)
@@ -7,11 +7,11 @@ A basic library app, made with Python and MongoDB
 
 [:page_facing_up: Report](.github/Nosequel%20submission.pdf)
 
-## :camera: Screenshots
+## 📷 Screenshots
 
 ![Demo image](.github/demo.png)
 
-## :rocket: Features
+## 🚀 Features
 
 ### Books
 
@@ -35,13 +35,13 @@ A basic library app, made with Python and MongoDB
 -	Sort by title, authors, ISBN or page count
 -	Search by name, username 
 
-## :pick: Installation
+## ⛏️ Installation
 
 - Clone this respository
 - Rename `config_template.py` to `config.py` and update values
 - [requirements.txt](/requirements.txt)
 
-## :computer: Usage
+## 💻 Usage
 
 Run `cli.py`
 
@@ -49,6 +49,6 @@ Run `cli.py`
 
 In any search query, append `sortby:<field>` to sort (fields: `title`, `authors`, `isbn`, `page_count`)
 
-## :page_with_curl: License
+## 📃  License
 
 [GNU General Public License v3.0](https://choosealicense.com/licenses/gpl-3.0/)
