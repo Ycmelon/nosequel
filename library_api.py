@@ -46,8 +46,7 @@ def delete_books(book_ids: list):
     """
 
     db.books.delete_many({"_id": {"$in": book_ids}})
-    db.loans.update_many({"book_id": {"$in": book_ids}},
-                         {"$set": {"returned": True}})
+    db.loans.update_many({"book_id": {"$in": book_ids}}, {"$set": {"returned": True}})
 
 
 def update_book(book_id: ObjectId, book: dict):
@@ -79,7 +78,8 @@ def remove_attributes_book(book_id: ObjectId, attributes: list):
     """
 
     remove_attributes = {attribute: "" for attribute in attributes}
-    db.books.update_one({"_id": book_id}, {"$unset": remove_attributes})
+    if not len(remove_attributes) == 0:
+        db.books.update_one({"_id": book_id}, {"$unset": remove_attributes})
 
 
 def get_borrower(borrower_id: ObjectId) -> dict:
@@ -117,8 +117,7 @@ def delete_borrowers(borrower_ids: list):
     """
 
     db.borrowers.delete_many({"_id": {"$in": borrower_ids}})
-    db.loans.update_many(
-        {"borrower_id": {"$in": borrower_ids}}, {"$set": {"returned": True}})
+    db.loans.update_many({"borrower_id": {"$in": borrower_ids}}, {"$set": {"returned": True}})
 
 
 def update_borrower(borrower_id: ObjectId, borrower: dict):
@@ -146,8 +145,7 @@ def checkout_book(borrower_id: ObjectId, book_id: ObjectId):
         book_id(ObjectId)
     """
 
-    db.loans.insert_one({"borrower_id": borrower_id,
-                         "book_id": book_id, "returned": False})
+    db.loans.insert_one({"borrower_id": borrower_id, "book_id": book_id, "returned": False})
 
 
 def return_book(book_id: ObjectId):
@@ -157,8 +155,9 @@ def return_book(book_id: ObjectId):
         book_id(ObjectId)
     """
 
-    book = db.loans.update_one({"book_id": book_id, "returned": False}, {
-                               "$set": {"returned": True}})
+    book = db.loans.update_one(
+        {"book_id": book_id, "returned": False}, {"$set": {"returned": True}}
+    )
 
 
 def validate_username(username: str):
