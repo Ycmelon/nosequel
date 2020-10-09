@@ -1,15 +1,17 @@
-# nosequel
+# 📘 Nosequel - Y3 CEP Weighted Assessment 3
 
-![GitHub licence](https://img.shields.io/github/license/Ycmelon/nosequel?color=orange)
-![Python version](https://img.shields.io/badge/Python-3.8-orange.svg)
+![Python version](https://img.shields.io/badge/python-3.8-blue.svg)
+![GitHub licence](https://img.shields.io/github/license/Ycmelon/nosequel?color=blue)
 
-MongoDB library app
+A basic library app, made with Python and MongoDB
 
-## Screenshots
+[:page_facing_up: Report](.github/Nosequel%20submission.pdf)
+
+## 📷 Screenshots
 
 ![Demo image](.github/demo.png)
 
-## Features
+## 🚀 Features
 
 ### Books
 
@@ -33,18 +35,13 @@ MongoDB library app
 -	Sort by title, authors, ISBN or page count
 -	Search by name, username 
 
-## Quirks
-
-- For update and insert, `field: ""` will not be inserted (no field in document)
-- Missing fields or `field: null` will show up as "\<null\>"
-
-## Installation
+## ⛏️ Installation
 
 - Clone this respository
 - Rename `config_template.py` to `config.py` and update values
 - [requirements.txt](/requirements.txt)
 
-## Usage
+## 💻 Usage
 
 Run `cli.py`
 
@@ -52,6 +49,6 @@ Run `cli.py`
 
 In any search query, append `sortby:<field>` to sort (fields: `title`, `authors`, `isbn`, `page_count`)
 
-## License
+## 📃  License
 
 [GNU General Public License v3.0](https://choosealicense.com/licenses/gpl-3.0/)
